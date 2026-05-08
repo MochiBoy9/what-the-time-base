@@ -7,21 +7,18 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-900 text-white font-sans min-h-screen p-8">
-
     <div class="max-w-6xl mx-auto">
         <header class="mb-12 text-center">
             <h1 class="text-4xl font-bold mb-2">what the time</h1>
             <p class="text-slate-400">what the time in a specific location</p>
         </header>
-
         <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             </div>
     </div>
-
     <script>
         //note to self: u can configure this spot (good for updating)
         const CITIES = [
-            { name: "New York", lat: 40.71, lon: -74.01, zone: "America/New_York" },
+            { name: "California", lat: 36.8, lon: 119.41, zone: "America/California" },
             { name: "London", lat: 51.50, lon: -0.12, zone: "Europe/London" },
             { name: "Tokyo", lat: 35.68, lon: 139.76, zone: "Asia/Tokyo" },
             { name: "Sydney", lat: -33.86, lon: 151.20, zone: "Australia/Sydney" }
@@ -39,13 +36,10 @@
         async function updateDashboard() {
             const container = document.getElementById('dashboard');
             container.innerHTML = ''; 
-
             for (const city of CITIES) {
                 const weather = await fetchWeather(city.lat, city.lon);
-                
                 const card = document.createElement('div');
                 card.className = "bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700 hover:border-blue-500 transition-all";
-                
                 const timeString = new Intl.DateTimeFormat('en-US', {
                     timeZone: city.zone,
                     hour: '2-digit',
@@ -53,7 +47,6 @@
                     second: '2-digit',
                     hour12: true
                 }).format(new Date());
-
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-4">
                         <div>
@@ -72,7 +65,26 @@
                 container.appendChild(card);
             }
         }
+        // shoutout to my teacher for helping me with this!
+function updateClocks() {
+    CITIES.forEach(city => {
+        const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
+        const timeElement = document.getElementById(`time-${cityId}`);
+        if (timeElement) {
+            const timeString = new Intl.DateTimeFormat('en-US', {
+                timeZone: city.zone,
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+            }).format(new Date());
+            
+            timeElement.innerText = timeString;
+        }
+    });
+}
         updateDashboard();
+        setInterval(updateClocks, 1000);
         setInterval(updateDashboard, 600000);
         setInterval(() => {
         }, 1000);

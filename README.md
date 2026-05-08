@@ -7,4 +7,6 @@ i actually worked on a majority of this project in school, where i dont have acc
 this website is built for both macondo reviewers or for anyone who stumbles here
 
 # credits
-to be added
+- open meteo for the weather
+- my teacher for helping me at some segments (aka, the ones were i had to do a ton of code)
+- my mom for helping me with decorating (she's awesome)

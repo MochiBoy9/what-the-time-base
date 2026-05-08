@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ayo what the time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-white font-sans min-h-screen p-8">
+
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-12 text-center">
+            <h1 class="text-4xl font-bold mb-2">what the time</h1>
+            <p class="text-slate-400">what the time in a specific location</p>
+        </header>
+
+        <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            </div>
+    </div>
+
+    <script>
+        //note to self: u can configure this spot (good for updating)
+        const CITIES = [
+            { name: "New York", lat: 40.71, lon: -74.01, zone: "America/New_York" },
+            { name: "London", lat: 51.50, lon: -0.12, zone: "Europe/London" },
+            { name: "Tokyo", lat: 35.68, lon: 139.76, zone: "Asia/Tokyo" },
+            { name: "Sydney", lat: -33.86, lon: 151.20, zone: "Australia/Sydney" }
+        ];
+        async function fetchWeather(lat, lon) {
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&temperature_unit=celsius`);
+                const data = await response.json();
+                return data.current;
+            } catch (error) {
+                console.error("Weather fetch failed:", error);
+                return null;
+            }
+        }
+        async function updateDashboard() {
+            const container = document.getElementById('dashboard');
+            container.innerHTML = ''; 
+
+            for (const city of CITIES) {
+                const weather = await fetchWeather(city.lat, city.lon);
+                
+                const card = document.createElement('div');
+                card.className = "bg-slate-800 rounded-xl p-6 shadow-lg border border-slate-700 hover:border-blue-500 transition-all";
+                
+                const timeString = new Intl.DateTimeFormat('en-US', {
+                    timeZone: city.zone,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: true
+                }).format(new Date());
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-2xl font-semibold">${city.name}</h2>
+                            <p class="text-sm text-slate-400 uppercase tracking-widest">${city.zone.split('/')[0]}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-3xl font-mono text-blue-400">${timeString}</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-4xl font-bold">${weather ? Math.round(weather.temperature_2m) : '--'}°C</span>
+                        <span class="text-slate-400 text-sm">Current Temp</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+        }
+        updateDashboard();
+        setInterval(updateDashboard, 600000);
+        setInterval(() => {
+        }, 1000);
+    </script>
+</body>
+</html>

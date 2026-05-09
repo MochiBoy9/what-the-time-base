@@ -6,7 +6,7 @@
     <title>ayo what the time</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class=" bg-gradient-to-br from-slate-900 to-slate-400 text-white min-h-screen p-8">
+<body class="bg-gradient-to-br from-slate-900 to-slate-400 text-white min-h-screen p-8">
     <div class="max-w-6xl mx-auto">
         <header class="mb-12 text-center">
             <h1 class="text-4xl font-bold mb-2">ay what's the time</h1>
@@ -16,91 +16,95 @@
         <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
     <script>
+        //phrases and cities are easily modifiable (but im too lazy do add more)
         const CITIES = [
+            { name: "Iran", lat: 35.68, lon: 51.38, zone: "Asia/Tehran" },
+            { name: "Palestine", lat: 31.94, lon: 35.20, zone: "Asia/Gaza" },
+            { name: "Philippines", lat: 14.59, lon: 120.98, zone: "Asia/Manila" },
+            { name: "Singapore", lat: 1.35, lon: 103.81, zone: "Asia/Singapore" },
             { name: "New York", lat: 40.71, lon: -74.01, zone: "America/New_York" },
             { name: "London", lat: 51.50, lon: -0.12, zone: "Europe/London" },
             { name: "Tokyo", lat: 35.68, lon: 139.76, zone: "Asia/Tokyo" },
-            { name: "Sydney", lat: -33.86, lon: 151.20, zone: "Australia/Sydney" },
-            { name: "California", lat: 36.77, lon: 119.41, zone: "America/Los_Angeles" },
-            { name: "Moscow", lat: 55.6, lon: 37.62, zone: "Europe/Moscow" },
-            { name: "Dubai", lat: 25.20, lon:55.27, zone: "Asia/Dubai" },
-            { name: "Philippines", lat:14.14, lon:121.29, zone: "Asia/Manila" }
+            { name: "California", lat: 34.05, lon: -118.24, zone: "America/Los_Angeles" },
+            { name: "Moscow", lat: 55.75, lon: 37.61, zone: "Europe/Moscow" },
+            { name: "Dubai", lat: 25.20, lon: 55.27, zone: "Asia/Dubai" }
         ];
-const PHRASES = [
-    "ay what's the time",
-    "¿qué hora es?",
-    "quelle heure est-il?",
-    "che ora è?",
-    "what time is it?",
-    "wat is de tijd?",
-    "hoe laat is het?",
-    "anong oras na?",
-    "jam berapa sekarang?",
-    "saat kaç?"
-];
-function updateHeader() {
-    const headerElement = document.querySelector('h1');
-    const randomPhrase = PHRASES[Math.floor(Math.random() * PHRASES.length)];
-    headerElement.innerText = randomPhrase;
-}
-async function fetchWeather(lat, lon) {
-    try {
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&temperature_unit=fahrenheit`);
-        const data = await response.json();
-        return data.current.temperature_2m;
-    } catch (e) { return '??'; }
-}
-async function buildDashboard() {
-    const container = document.getElementById('dashboard');
-    container.innerHTML = ''; 
-    for (const city of CITIES) {
-        const temp = await fetchWeather(city.lat, city.lon);
-        const card = document.createElement('div');
-        card.className = "bg-slate-800/50 backdrop-blur-md rounded-xl p-6 shadow-lg border border-slate-700 transition-all duration-300 transform hover:scale-105 hover:border-blue-500 hover:shadow-2xl cursor-default";
-        const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
-        card.innerHTML = `
-            <div class="flex justify-between items-start mb-4">
-                <div>
-                    <h2 class="text-2xl font-semibold">${city.name}</h2>
-                    <p class="text-xs text-slate-500 uppercase tracking-widest">${city.zone}</p>
-                </div>
-                <div class="text-right">
-                    <p id="time-${cityId}" class="text-3xl font-mono text-blue-400 font-bold">--:--:--</p>
-                </div>
-            </div>
-            <div class="mt-6 flex items-center justify-between">
-                <span class="text-4xl font-bold">${temp !== '??' ? Math.round(temp) : '--'}°F</span>
-                <span class="text-slate-400 text-sm">Local Temp</span>
-            </div>
-        `;
-        container.appendChild(card);
-    }
-    updateClocks();
-}
-function updateClocks() {
-    CITIES.forEach(city => {
-        const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
-        const timeElement = document.getElementById(`time-${cityId}`);
-        if (timeElement) {
-            try {
-                timeElement.innerText = new Intl.DateTimeFormat('en-US', {
-                    timeZone: city.zone,
-                    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
-                }).format(new Date());
-            } catch (e) {
-                timeElement.innerText = "Error";
-            }
+
+        const PHRASES = [
+            "ay what's the time",
+            "¿qué hora es?",
+            "quelle heure est-il?",
+            "che ora è?",
+            "what time is it?",
+            "wat is de tijd?",
+            "hoe laat is het?",
+            "anong oras na?",
+            "jam berapa sekarang?",
+            "saat kaç?"
+        ];
+        function updateHeader() {
+            const headerElement = document.querySelector('h1');
+            const randomPhrase = PHRASES[Math.floor(Math.random() * PHRASES.length)];
+            headerElement.innerText = randomPhrase;
         }
-    });
-}
-
-// very important area, runs pretty much all the "ticks"
-updateHeader(); 
-buildDashboard();
-setInterval(updateClocks, 1000);
-setInterval(buildDashboard, 1800000);
-
-// whoever decided to make github links this complex needs to be destroyed
+        async function fetchWeather(lat, lon) {
+            try {
+                const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m&temperature_unit=fahrenheit`);
+                const data = await response.json();
+                return data.current.temperature_2m;
+            } catch (e) { return '??'; }
+        }
+//builds the cards
+        async function buildDashboard() {
+            const container = document.getElementById('dashboard');
+            container.innerHTML = ''; 
+            for (const city of CITIES) {
+                const temp = await fetchWeather(city.lat, city.lon);
+                const card = document.createElement('div');
+                card.className = "bg-slate-800/50 backdrop-blur-md rounded-xl p-6 shadow-lg border border-slate-700 transition-all duration-300 transform hover:scale-105 hover:border-blue-500 hover:shadow-2xl cursor-default";
+                const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h2 class="text-2xl font-semibold">${city.name}</h2>
+                            <p class="text-xs text-slate-500 uppercase tracking-widest">${city.zone}</p>
+                        </div>
+                        <div class="text-right">
+                            <p id="time-${cityId}" class="text-3xl font-mono text-blue-400 font-bold">--:--:--</p>
+                        </div>
+                    </div>
+                    <div class="mt-6 flex items-center justify-between">
+                        <span class="text-4xl font-bold">${temp !== '??' ? Math.round(temp) : '--'}°F</span>
+                        <span class="text-slate-400 text-sm">Local Temp</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            }
+            updateClocks();
+        }
+// basically runs the clocks
+        function updateClocks() {
+            CITIES.forEach(city => {
+                const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
+                const timeElement = document.getElementById(`time-${cityId}`);
+                if (timeElement) {
+                    try {
+                        timeElement.innerText = new Intl.DateTimeFormat('en-US', {
+                            timeZone: city.zone,
+                            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true
+                        }).format(new Date());
+                    } catch (e) {
+                        timeElement.innerText = "Error";
+                    }
+                }
+            });
+        }
+        //tick updater
+        updateHeader(); 
+        buildDashboard();
+        setInterval(updateClocks, 1000);
+        setInterval(buildDashboard, 1800000);
+    </script>
     <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
         <a href="https://github.com/MochiBoy9" target="_blank" class="bg-slate-800 p-3 rounded-full border border-slate-700 hover:border-blue-500 hover:scale-110 transition-all shadow-lg group" title="my github">
             <svg class="w-6 h-6 fill-white group-hover:fill-blue-400" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.041-1.412-4.041-1.412-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>

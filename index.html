@@ -5,25 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ayo what the time</title>
     <script src="https://cdn.tailwindcss.com"></script>
-  <style>
+<style>
     * {
-        scrollbar-width: thin;
-        scrollbar-color: #475569 transparent; 
+        scrollbar-width: none;
     }
-    ::-webkit-scrollbar {
-        width: 10px;
+    *::-webkit-scrollbar {
+        display: none;
     }
-    ::-webkit-scrollbar-track {
-        background: transparent; 
-    }
-    ::-webkit-scrollbar-thumb {
-        background-color: #475569;
-        border-radius: 20px;
-        border: 2px solid rgba(0, 0, 0, 0); 
-        background-clip: padding-box;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-        background-color: #3b82f6; 
+    body {
+        -ms-overflow-style: none;  
+        scrollbar-width: none;    
     }
 </style>
 </head>

@@ -30,6 +30,10 @@
         </header>
         <div id="dashboard" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
+    <div id="noResults" class="hidden text-center py-20">
+    <p class="text-2xl text-slate-500 font-semibold">we don't got that yet</p>
+    <p class="text-slate-600 mt-2">or maybe you typed smtn that dont exist</p>
+</div>
     <script>
         //phrases and cities are easily modifiable (but im too lazy do add more)
         const CITIES = [
@@ -45,7 +49,17 @@
             { name: "Dubai", lat: 25.20, lon: 55.27, zone: "Asia/Dubai" },
             { name: "Hong Kong", lat: 22.31, lon: 114.16, zone: "Asia/Hong_Kong" },
             { name: "Toronto", lat: 43.65, lon: -79.38, zone: "America/Toronto" },
-            { name: "Antarctica", lat: -77.84, lon: 166.66, zone: "Antarctica/McMurdo" }
+            { name: "Antarctica", lat: -77.84, lon: 166.66, zone: "Antarctica/McMurdo" },
+            { name: "France", lat: 48.85, lon: 2.35, zone: "Europe/Paris" },
+            { name: "Australia", lat: -33.86, lon: 151.20, zone: "Australia/Sydney" },
+            { name: "Brazil", lat: -23.55, lon: -46.63, zone: "America/Sao_Paulo" },
+            { name: "Egypt", lat: 30.04, lon: 31.23, zone: "Africa/Cairo" },
+            { name: "Iceland", lat: 64.14, lon: -21.89, zone: "Atlantic/Reykjavik" },
+            { name: "South Korea", lat: 37.56, lon: 126.97, zone: "Asia/Seoul" },
+            { name: "South Africa", lat: -33.92, lon: 18.42, zone: "Africa/Johannesburg" },
+            { name: "Thailand", lat: 13.75, lon: 100.50, zone: "Asia/Bangkok" },
+            { name: "Germany", lat: 52.52, lon: 13.40, zone: "Europe/Berlin" },
+            { name: "Mexico", lat: 19.43, lon: -99.13, zone: "America/Mexico_City" }
         ];
         const PHRASES = [
             "ay what's the time",
@@ -71,18 +85,30 @@
                 return data.current;
             } catch (e) { return '??'; }
         }
-        document.getElementById('citySearch').addEventListener('input', (event) => {
-            const searchterm = event.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.city-card');
-            cards.forEach(card => {
-                const cityName = card.getAttribute('data-name');
-                if (cityName.includes(searchterm)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
-                }
-            });
-        });
+document.getElementById('citySearch').addEventListener('input', (event) => {
+    const searchterm = event.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.city-card');
+    const noResults = document.getElementById('noResults');
+    
+    let visibleCount = 0; // Keep track of matches
+
+    cards.forEach(card => {
+        const cityName = card.getAttribute('data-name');
+        if (cityName.includes(searchterm)) {
+            card.style.display = "block";
+            visibleCount++; // Found a match!
+        } else {
+            card.style.display = "none";
+        }
+    });
+
+    // Toggle the "No Results" message based on the count
+    if (visibleCount === 0) {
+        noResults.classList.remove('hidden');
+    } else {
+        noResults.classList.add('hidden');
+    }
+});
     //builds the cards
         async function buildDashboard() {
             const container = document.getElementById('dashboard');

@@ -90,7 +90,7 @@
             for (const city of CITIES) {
                 const weatherData = await fetchWeather(city.lat, city.lon);
                 const card = document.createElement('div');
-                card.className = "bg-slate-800/50 backdrop-blur-md rounded-xl p-6 shadow-lg border border-slate-700 transition-all duration-300 transform hover:scale-105 hover:border-blue-500 hover:shadow-2xl cursor-default";
+                card.className = "city-card bg-slate-800/50 backdrop-blur-md rounded-xl p-6 shadow-lg border border-slate-700 transition-all duration-300 transform hover:scale-105 hover:border-blue-500 hover:shadow-2xl cursor-default";
                 card.setAttribute('data-name', city.name.toLowerCase());
                 const cityId = city.name.replace(/\s+/g, '-').toLowerCase();
                 const temp = weatherData !== '??' ? Math.round(weatherData.temperature_2m) : '--';

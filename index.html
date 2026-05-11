@@ -29,6 +29,7 @@
         <p class="text-slate-600 mt-2">search something else pls</p>
     </div>
 <script>
+    //tryna be nonchalant but someone says to modify const cities
     const CITIES = [
         { name: "Iran", lat: 35.68, lon: 51.38, zone: "Asia/Tehran" },
         { name: "Palestine", lat: 31.94, lon: 35.20, zone: "Asia/Gaza" },
@@ -55,10 +56,11 @@
         { name: "Mexico", lat: 19.43, lon: -99.13, zone: "America/Mexico_City" }
     ];
     const msg_list = ["ay what's the time", "¿qué hora es?", "quelle heure est-il?", "che ora è?", "what time is it?", "anong oras na?", "saat kaç?"];
-    function updateHeader() {
+    function updateTheHead() {
         let el = document.querySelector('h1');
         el.innerText = msg_list[Math.floor(Math.random() * msg_list.length)];
     }
+    //ACTUAL WEATHER??? NO WAY
     const interpret_weather = (c) => {
         if (c == 0) return "Clear Sky";
         if (c >= 1 && c <= 3) return "Partly Cloudy";
@@ -70,7 +72,7 @@
         if (c >= 95) return "Stormy";
         return "Unknown";
     }
-    async function fetchWeather(lat, lon) {
+    async function whatTheWeather(lat, lon) {
         try {
             const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,weather_code&temperature_unit=fahrenheit`);
             const raw = await res.json();
@@ -96,8 +98,9 @@
         let no_res = document.getElementById('noResults');
         if (found === 0) no_res.classList.remove('hidden');
         else no_res.classList.add('hidden');
+        //function name is self-explanatory
     };
-    function buildDashboard() {
+    function makeEVERYTHING() {
         const board = document.getElementById('dashboard');
         board.innerHTML = ''; 
         CITIES.forEach(item => {
@@ -133,7 +136,7 @@
         updateClocks();
     }
     const get_and_set_weather = async (city_obj, id) => {
-        let weather = await fetchWeather(city_obj.lat, city_obj.lon);
+        let weather = await whatTheWeather(city_obj.lat, city_obj.lon);
         let t_el = document.getElementById(`temp-${id}`);
         let h_el = document.getElementById(`hum-${id}`);
         let c_el = document.getElementById(`cond-${id}`);
@@ -158,12 +161,13 @@
             }
         });
     }
-    updateHeader(); 
-    buildDashboard();
+    //the main heartbeats of the website
+    updateTheHead(); 
+    makeEVERYTHING();
     setInterval(updateClocks, 1000);
     setInterval(() => {
-        console.log("refreshing dash...");
-        buildDashboard();
+        console.log("getting the newest weather rn");
+        makeEVERYTHING();
     }, 1800000);
 </script>
     <div class="fixed bottom-6 right-6 flex flex-col gap-4 z-50">

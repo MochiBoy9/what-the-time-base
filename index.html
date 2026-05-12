@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ayo what the time - v1.0</title>
+    <title>ayo what the time?</title>
     <script src="https://cdn.tailwindcss.com"></script>
 <style>
     * { scrollbar-width: none; }
@@ -18,7 +18,7 @@
     .ticker-move {
         display: inline-block;
         white-space: nowrap;
-        animation: scroll 20s linear infinite;
+        animation: scroll 100s linear infinite;
     }
     .ticker-wrap:hover .ticker-move { animation-play-state: paused; }
 </style>
@@ -27,7 +27,7 @@
 
     <div class="fixed top-0 left-0 w-full bg-blue-600/20 backdrop-blur-md border-b border-white/10 z-[100] h-8 overflow-hidden ticker-wrap">
         <div id="tickerContent" class="ticker-move pt-1 text-sm font-mono uppercase tracking-widest text-blue-200">
-            Fetching global extremes... hang tight...
+            making sure our data is correct... hollon...
         </div>
     </div>
 
@@ -35,9 +35,9 @@
         <header class="mb-12 text-center">
             <h1 class="text-4xl font-bold mb-2">ay what's the time</h1>
             <p class="text-slate-400">weather and time platform</p>
-            <p class="text-slate-400 text-xs italic">v1.0 - local hero & dynamic themes active</p>
+            <p class="text-slate-400 text-xs italic">current update: 1.0 - out of beta</p>
             
-            <div id="localHero" class="mt-8 hidden">
+            <div id="googlelocation" class="mt-8 hidden">
                 <div class="bg-white/10 border-2 border-blue-500/50 rounded-2xl p-6 mb-8 backdrop-blur-xl transition-all">
                     <p class="text-blue-400 text-xs font-bold uppercase mb-1">Your Location</p>
                     <div class="flex flex-wrap justify-between items-center gap-4">
@@ -202,7 +202,7 @@ const CITIES = [
             navigator.geolocation.getCurrentPosition(async (pos) => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                document.getElementById('localHero').classList.remove('hidden');
+                document.getElementById('googlelocation').classList.remove('hidden');
                 const data = await whatTheWeather(lat, lon);
                 if (data) {
                     document.getElementById('heroName').innerText = "Current Location";
